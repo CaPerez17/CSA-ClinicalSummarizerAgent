@@ -1,0 +1,26 @@
+# FastAPI y servidor ASGI
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6  # Para manejar archivos (audio)
+
+# Redis para cola de trabajos
+redis==5.0.1
+rq==1.15.1  # Redis Queue - worker framework
+
+# Whisper para transcripción de audio
+openai-whisper==20231117
+
+# LLM - usaremos OpenAI API (puedes cambiar a local después)
+openai==1.3.7
+
+# Validación de datos
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Utilidades
+python-dotenv==1.0.0  # Para variables de entorno
+httpx==0.25.2  # Cliente HTTP async (para llamadas externas)
+
+# Logging y monitoreo
+structlog==23.2.0
+
