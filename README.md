@@ -4,7 +4,7 @@ Microservicio completo para resumir conversaciones clínicas usando LLM y arquit
 
 ## 🎯 Objetivo del Proyecto
 
-Este proyecto demuestra cómo construir un microservicio escalable que procesa datos clínicos usando modelos de IA, siguiendo mejores prácticas de arquitectura de software.
+Microservicio de producción para procesamiento de conversaciones clínicas usando LLM, implementando arquitectura de cola asíncrona para desacoplar la latencia de inference de la respuesta del API. Este proyecto sirve como referencia para construir sistemas escalables que procesan datos con modelos de IA pesados.
 
 ## 🏗️ Arquitectura
 
@@ -26,7 +26,9 @@ Este proyecto demuestra cómo construir un microservicio escalable que procesa d
 2. **Redis**: Cola de trabajos y almacenamiento temporal de resultados
 3. **Worker**: Proceso separado que ejecuta inference (Whisper + LLM)
 
-## 📚 Conceptos Clave Explicados
+## 📚 Arquitectura y Decisiones de Diseño
+
+Esta sección explica las decisiones arquitectónicas clave y los patrones implementados, útiles para desarrolladores que buscan entender o replicar este tipo de sistemas.
 
 ### 1. ¿Qué es Inference?
 
@@ -369,61 +371,56 @@ CSA-ClinicalSummarizerAgent/
 └── README.md               # Este archivo
 ```
 
-## 🔍 Conceptos para la Entrevista
+## 🚀 Mejoras y Extensiones Futuras
 
-### Preguntas que puedes responder ahora:
+Este proyecto implementa una arquitectura base sólida y escalable. Para entornos de producción, considera las siguientes extensiones:
 
-1. **¿Qué es inference y por qué es lento?**
-   - Inference es ejecutar un modelo con datos nuevos
-   - Es lento porque requiere cálculos complejos en millones de parámetros
+### Mejoras de Infraestructura
+- **WebSocket endpoints** para streaming de resultados en tiempo real
+- **Retry logic con exponential backoff** para manejo robusto de fallos
+- **Métricas y monitoreo** (Prometheus + Grafana) para observabilidad
+- **Rate limiting** y throttling para prevenir abuso
+- **Caching inteligente** para resultados similares (Redis Cache)
 
-2. **¿Por qué no ejecutar inference en la API?**
-   - Bloquea el servidor, mala UX, no escala
-   - Solución: cola + workers separados
+### Seguridad y Compliance
+- **Autenticación y autorización** (JWT tokens, OAuth2)
+- **Encriptación de datos en tránsito y reposo** (TLS, encryption at rest)
+- **HIPAA compliance** para manejo de datos de salud sensibles
+- **Audit logging** para trazabilidad completa
 
-3. **¿Cómo funciona una arquitectura con cola?**
-   - API encola trabajos rápidamente
-   - Workers procesan en background
-   - Resultados se almacenan en Redis
+### Calidad y Confiabilidad
+- **Tests exhaustivos** (unitarios, integración, E2E)
+- **CI/CD pipeline** con validación automática
+- **Health checks avanzados** y circuit breakers
+- **Graceful degradation** para escenarios de fallo
 
-4. **¿Cómo escala este sistema?**
-   - Múltiples instancias del API (load balancer)
-   - Múltiples workers procesando en paralelo
-   - Redis distribuye trabajos
+### Optimizaciones
+- **Batch processing** para múltiples trabajos simultáneos
+- **Model quantization** para reducir latencia de inference
+- **Prompt optimization** basado en métricas de precisión
+- **Distributed tracing** (OpenTelemetry) para debugging
 
-5. **¿Qué es FHIR y por qué es importante?**
-   - Estándar para intercambio de información médica
-   - Permite interoperabilidad entre sistemas
+## 📝 Consideraciones de Producción
 
-## 🎓 Próximos Pasos para Aprender
+Este microservicio sigue mejores prácticas de arquitectura de software modernas. Al desplegar en producción, asegúrate de:
 
-1. **Implementar WebSocket endpoint** para streaming
-2. **Añadir tests unitarios** para cada módulo
-3. **Implementar retry logic** en el worker
-4. **Añadir métricas y monitoreo** (Prometheus)
-5. **Implementar autenticación** (JWT tokens)
-6. **Añadir rate limiting** para prevenir abuso
-7. **Optimizar prompts** del LLM para mejor precisión
-8. **Implementar caching** para resultados similares
-
-## 📝 Notas Importantes
-
-- Este es un proyecto educativo/demostración
-- Para producción, necesitarías:
-  - Autenticación y autorización
-  - Manejo robusto de errores
-  - Logging y monitoreo completo
-  - Tests exhaustivos
-  - Documentación API completa
-  - CI/CD pipeline
-  - Manejo de datos sensibles (HIPAA compliance)
+- **Escalabilidad horizontal**: Configurar auto-scaling basado en métricas de cola
+- **Alta disponibilidad**: Múltiples instancias con load balancing
+- **Persistencia**: Backup y replicación de Redis para datos críticos
+- **Monitoreo proactivo**: Alertas para latencia, errores y saturación de cola
+- **Documentación API**: OpenAPI/Swagger completo para integración
+- **Versionado**: Estrategia de versionado de API para compatibilidad
 
 ## 🤝 Contribuciones
 
-Este proyecto es parte de la preparación para entrevistas técnicas.
-Siéntete libre de mejorarlo y experimentar con diferentes enfoques.
+Este proyecto está diseñado como referencia para desarrolladores que buscan implementar sistemas de procesamiento de IA con arquitecturas escalables. Las contribuciones son bienvenidas, especialmente en:
+
+- Optimizaciones de performance
+- Mejoras en la precisión del agente clínico
+- Extensiones de funcionalidad
+- Mejoras en documentación y ejemplos
 
 ## 📄 Licencia
 
-Este proyecto es educativo y está disponible para uso personal.
+Este proyecto está disponible bajo licencia MIT. Ver archivo LICENSE para más detalles.
 
